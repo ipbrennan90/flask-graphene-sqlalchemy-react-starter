@@ -4,7 +4,11 @@ FROM python:3
 COPY ./server/requirements.txt /app/server/requirements.txt
 WORKDIR /app/server
 RUN pip install -r ./requirements.txt
+
+COPY ./server/models /app/server/models
+COPY ./server/schema.py /app/server/schema.py
+COPY ./server/seed.py /app/server/seed.py
 COPY ./server/server.py /app/server/server.py
 
 # Command to run upon successful docker install
-CMD ["python", "server.py"]
+CMD python seed.py && python server.py

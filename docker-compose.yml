@@ -5,9 +5,11 @@ services:
       context: .
       dockerfile: docker.python
     image: python-flask
-    container_name: server-container
+    container_name: flask-graphql
     ports:
       - "3000:3000"
+    depends_on:
+      - "db"
     volumes:
       - .:/app
       - shared:/shared
@@ -16,13 +18,26 @@ services:
       context: .
       dockerfile: docker.react
     image: react
-    container_name: static-container
+    container_name: react-container
     ports:
       - "5000:5000"
     volumes:
       - .:/app
       - /app/static/node_modules
       - shared:/shared
+  db:
+    build: 
+      context: .
+      dockerfile: docker.postgres
+    image: starter-postgres
+    container_name: school-db
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: "iam"
+      POSTGRES_PASSWORD: "developer"
+      POSTGRES_DB: "school"
+
 volumes:
   shared:
     driver: local

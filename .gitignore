@@ -5,6 +5,7 @@ node_modules
 .grunt
 _SpecRunner.html
 __benchmarks__
+__pycache__
 build/
 remote-repo/
 coverage/
