@@ -4,4 +4,4 @@ SQLAlchemy==1.2.5
 graphene_sqlalchemy>=2.0
 Flask-GraphQl==1.4.1
 psycopg2==2.7.4
-
+alembic==0.9.9
