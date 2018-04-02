@@ -29,15 +29,15 @@ def upgrade():
         sa.Column('name', sa.String),
         sa.Column('hired_on', sa.DateTime, default=sa.func.now()),
         sa.Column('department_id', sa.Integer, sa.ForeignKey(
-            'department.id'))
+            'department.id', ondelete="CASCADE"))
     )
 
     op.bulk_insert(
         department_type_table,
         [
-            {'id': 1, 'name': 'Dat Boi'},
-            {'id': 2, 'name': 'Computer Science'},
-            {'id': 3, 'name': 'Engineering'}
+            {'name': 'Dat Boi'},
+            {'name': 'Computer Science'},
+            {'name': 'Engineering'}
         ]
     )
 

@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_graphql import GraphQLView
 
 from models.foundation import db_session
-from schema import schema, Department
+from graph.schema import schema, Department
 
 import logging
 
