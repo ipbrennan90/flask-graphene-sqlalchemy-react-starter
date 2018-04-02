@@ -1,22 +1,17 @@
 from models.foundation import Base
 from models.department import Department
-from models.subject import Subject
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import (relationship, backref)
 
 
-class Teacher(Base):
-    __tablename__ = 'teacher'
+class Subject(Base):
+    __tablename__ = 'subject'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    hired_on = Column(DateTime, default=func.now())
     department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(
         Department,
-        backref=backref('teachers',
+        backref=backref('subjects',
                         uselist=True,
                         cascade='delete,all')
     )
-    subjects = relationship(Subject,
-                            secondary='session',
-                            backref='teachers')

@@ -3,6 +3,8 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models.department import Department as DepartmentModel
 from models.teacher import Teacher as TeacherModel
+from models.subject import Subject as SubjectModel
+from models.session import Session as SessionModel
 from models.foundation import db_session
 import pdb
 
@@ -17,6 +19,37 @@ class Teacher(SQLAlchemyObjectType):
     class Meta:
         model = TeacherModel
         interfaces = (relay.Node, )
+
+
+class Session(SQLAlchemyObjectType):
+    class Meta:
+        model = SessionModel
+        interfaces = (relay.Node, )
+
+
+class Subject(SQLAlchemyObjectType):
+    class Meta:
+        model = SubjectModel
+        interfaces = (relay.Node, )
+
+
+class CreateSubject(graphene.Mutation):
+    id = graphene.Int()
+    name = graphene.String()
+    department = graphene.Field(Department)
+
+    class Arguments:
+        department = graphene.Int()
+        name = graphene.String()
+
+    def mutate(self, info, name, department):
+        q = Department.get_query(info)
+        subject_department = q.filter_by(id=department).one()
+        new_subject = SubjectModel(name=name, department=subject_department)
+        db_session.add(new_subject)
+        db_session.commit()
+
+        return CreateSubject(id=new_subject.id, name=new_subject.name, department=new_subject.department)
 
 
 class CreateDepartment(graphene.Mutation):
@@ -122,9 +155,10 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     create_department = CreateDepartment.Field()
     create_teacher = CreateTeacher.Field()
+    create_subject = CreateSubject.Field()
     update_teacher = UpdateTeacher.Field()
     destroy_teacher = DestroyTeacher.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation,
-                         types=[Teacher, Department])
+                         types=[Teacher, Department, Subject])
